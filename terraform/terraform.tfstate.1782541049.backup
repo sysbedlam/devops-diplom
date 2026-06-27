@@ -1,0 +1,577 @@
+{
+  "version": 4,
+  "terraform_version": "1.15.7",
+  "serial": 43,
+  "lineage": "d8c5f78a-8a4c-7c3d-277e-6080c2b70ce7",
+  "outputs": {
+    "k8s_app_ip": {
+      "value": "10.0.1.11",
+      "type": "string"
+    },
+    "k8s_master_ip": {
+      "value": "10.0.1.10",
+      "type": "string"
+    },
+    "srv_internal_ip": {
+      "value": "10.0.1.20",
+      "type": "string"
+    },
+    "srv_ip": {
+      "value": "84.201.175.91",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "local_file",
+      "name": "ansible_inventory",
+      "provider": "provider[\"registry.terraform.io/hashicorp/local\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "content": "[srv]\nsrv ansible_host=84.201.175.91 ansible_user=ubuntu\n\n[k8s_master]\nk8s-master ansible_host=10.0.1.10 ansible_user=ubuntu ansible_ssh_common_args='-o ProxyJump=ubuntu@84.201.175.91'\n\n[k8s_nodes]\nk8s-app ansible_host=10.0.1.11 ansible_user=ubuntu ansible_ssh_common_args='-o ProxyJump=ubuntu@84.201.175.91'\n\n[k8s:children]\nk8s_master\nk8s_nodes\n",
+            "content_base64": null,
+            "content_base64sha256": "AfVxaEc1uFhd/I+xsYAe3/KVonA54Ly2jKgYwsDU4mU=",
+            "content_base64sha512": "fOygv5TzwiKCTaiVZK3RpoZ+pJ0MfZ8pkBPle027Sm3n5C3L66WTYByL2mAxekvdd78Ncy9mSp7KgPxduSVCog==",
+            "content_md5": "1297da95c2ac7b619c2c0fd4fce1670c",
+            "content_sha1": "c134bbdccb2a976a7bd75e537b5866abfa8f2101",
+            "content_sha256": "01f571684735b8585dfc8fb1b1801edff295a27039e0bcb68ca818c2c0d4e265",
+            "content_sha512": "7ceca0bf94f3c222824da89564add1a6867ea49d0c7d9f299013e57b4dbb4a6de7e42dcbeba593601c8bda60317a4bdd77bf0d732f664a9eca80fc5db92542a2",
+            "directory_permission": "0777",
+            "file_permission": "0777",
+            "filename": "../ansible/inventory.ini",
+            "id": "c134bbdccb2a976a7bd75e537b5866abfa8f2101",
+            "sensitive_content": null,
+            "source": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "sensitive_content"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "yandex_compute_instance.k8s_app",
+            "yandex_compute_instance.k8s_master",
+            "yandex_compute_instance.srv",
+            "yandex_vpc_address.srv_ip",
+            "yandex_vpc_network.network",
+            "yandex_vpc_route_table.nat_route",
+            "yandex_vpc_subnet.subnet"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_compute_instance",
+      "name": "k8s_app",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "allow_recreate": null,
+            "allow_stopping_for_update": true,
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "device_name": "fhmpn428imfdhk18d27u",
+                "disk_id": "fhmpn428imfdhk18d27u",
+                "initialize_params": [
+                  {
+                    "block_size": 4096,
+                    "description": "",
+                    "image_id": "fd83vkt13re8v8cdapql",
+                    "kms_key_id": "",
+                    "name": "",
+                    "size": 20,
+                    "snapshot_id": "",
+                    "type": "network-hdd"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "created_at": "2026-06-27T05:20:20Z",
+            "description": "",
+            "filesystem": [],
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "fqdn": "k8s-app.ru-central1.internal",
+            "gpu_cluster_id": "",
+            "hardware_generation": [
+              {
+                "generation2_features": [],
+                "legacy_features": [
+                  {
+                    "pci_topology": "PCI_TOPOLOGY_V2"
+                  }
+                ]
+              }
+            ],
+            "hostname": "k8s-app",
+            "id": "fhmnl2it3k8che7b0bns",
+            "labels": {},
+            "local_disk": [],
+            "maintenance_grace_period": "",
+            "maintenance_policy": null,
+            "metadata": {
+              "ssh-keys": "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA5fHUdoUbbp1fo9K85xlFMxX2ownfbH9RPF68lRUvYn balas@Centavra\r\n"
+            },
+            "metadata_options": [
+              {
+                "aws_v1_http_endpoint": 1,
+                "aws_v1_http_token": 2,
+                "aws_v2_http_endpoint": 1,
+                "aws_v2_http_token": 1,
+                "gce_http_endpoint": 1,
+                "gce_http_token": 1
+              }
+            ],
+            "name": "k8s-app",
+            "network_acceleration_type": "standard",
+            "network_interface": [
+              {
+                "dns_record": [],
+                "index": 0,
+                "ip_address": "10.0.1.11",
+                "ipv4": true,
+                "ipv6": false,
+                "ipv6_address": "",
+                "ipv6_dns_record": [],
+                "mac_address": "d0:0d:17:a8:a5:d1",
+                "nat": false,
+                "nat_dns_record": [],
+                "nat_ip_address": "",
+                "nat_ip_version": "",
+                "security_group_ids": [],
+                "subnet_id": "e9bfnojru6lhgjea4qjb"
+              }
+            ],
+            "placement_policy": [
+              {
+                "host_affinity_rules": [],
+                "placement_group_id": "",
+                "placement_group_partition": 0
+              }
+            ],
+            "platform_id": "standard-v1",
+            "resources": [
+              {
+                "core_fraction": 100,
+                "cores": 2,
+                "gpus": 0,
+                "memory": 4
+              }
+            ],
+            "scheduling_policy": [
+              {
+                "preemptible": false
+              }
+            ],
+            "secondary_disk": [],
+            "service_account_id": "",
+            "status": "running",
+            "timeouts": null,
+            "zone": "ru-central1-a"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjMwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "yandex_vpc_network.network",
+            "yandex_vpc_route_table.nat_route",
+            "yandex_vpc_subnet.subnet"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_compute_instance",
+      "name": "k8s_master",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "allow_recreate": null,
+            "allow_stopping_for_update": true,
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "device_name": "fhmmmvfvgpa7c60himvb",
+                "disk_id": "fhmmmvfvgpa7c60himvb",
+                "initialize_params": [
+                  {
+                    "block_size": 4096,
+                    "description": "",
+                    "image_id": "fd83vkt13re8v8cdapql",
+                    "kms_key_id": "",
+                    "name": "",
+                    "size": 20,
+                    "snapshot_id": "",
+                    "type": "network-hdd"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "created_at": "2026-06-27T05:20:24Z",
+            "description": "",
+            "filesystem": [],
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "fqdn": "k8s-master.ru-central1.internal",
+            "gpu_cluster_id": "",
+            "hardware_generation": [
+              {
+                "generation2_features": [],
+                "legacy_features": [
+                  {
+                    "pci_topology": "PCI_TOPOLOGY_V2"
+                  }
+                ]
+              }
+            ],
+            "hostname": "k8s-master",
+            "id": "fhme1jnvikfpcb18h4ob",
+            "labels": {},
+            "local_disk": [],
+            "maintenance_grace_period": "",
+            "maintenance_policy": null,
+            "metadata": {
+              "ssh-keys": "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA5fHUdoUbbp1fo9K85xlFMxX2ownfbH9RPF68lRUvYn balas@Centavra\r\n"
+            },
+            "metadata_options": [
+              {
+                "aws_v1_http_endpoint": 1,
+                "aws_v1_http_token": 2,
+                "aws_v2_http_endpoint": 1,
+                "aws_v2_http_token": 1,
+                "gce_http_endpoint": 1,
+                "gce_http_token": 1
+              }
+            ],
+            "name": "k8s-master",
+            "network_acceleration_type": "standard",
+            "network_interface": [
+              {
+                "dns_record": [],
+                "index": 0,
+                "ip_address": "10.0.1.10",
+                "ipv4": true,
+                "ipv6": false,
+                "ipv6_address": "",
+                "ipv6_dns_record": [],
+                "mac_address": "d0:0d:e0:ce:ff:95",
+                "nat": false,
+                "nat_dns_record": [],
+                "nat_ip_address": "",
+                "nat_ip_version": "",
+                "security_group_ids": [],
+                "subnet_id": "e9bfnojru6lhgjea4qjb"
+              }
+            ],
+            "placement_policy": [
+              {
+                "host_affinity_rules": [],
+                "placement_group_id": "",
+                "placement_group_partition": 0
+              }
+            ],
+            "platform_id": "standard-v1",
+            "resources": [
+              {
+                "core_fraction": 100,
+                "cores": 2,
+                "gpus": 0,
+                "memory": 4
+              }
+            ],
+            "scheduling_policy": [
+              {
+                "preemptible": false
+              }
+            ],
+            "secondary_disk": [],
+            "service_account_id": "",
+            "status": "running",
+            "timeouts": null,
+            "zone": "ru-central1-a"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjMwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "yandex_vpc_network.network",
+            "yandex_vpc_route_table.nat_route",
+            "yandex_vpc_subnet.subnet"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_compute_instance",
+      "name": "srv",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "allow_recreate": null,
+            "allow_stopping_for_update": true,
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "device_name": "fhm81tghbjr76lh8408q",
+                "disk_id": "fhm81tghbjr76lh8408q",
+                "initialize_params": [
+                  {
+                    "block_size": 4096,
+                    "description": "",
+                    "image_id": "fd83vkt13re8v8cdapql",
+                    "kms_key_id": "",
+                    "name": "",
+                    "size": 30,
+                    "snapshot_id": "",
+                    "type": "network-hdd"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "created_at": "2026-06-27T05:20:23Z",
+            "description": "",
+            "filesystem": [],
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "fqdn": "srv.ru-central1.internal",
+            "gpu_cluster_id": "",
+            "hardware_generation": [
+              {
+                "generation2_features": [],
+                "legacy_features": [
+                  {
+                    "pci_topology": "PCI_TOPOLOGY_V2"
+                  }
+                ]
+              }
+            ],
+            "hostname": "srv",
+            "id": "fhmqimk3vg522diu5rvi",
+            "labels": {},
+            "local_disk": [],
+            "maintenance_grace_period": "",
+            "maintenance_policy": null,
+            "metadata": {
+              "ssh-keys": "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA5fHUdoUbbp1fo9K85xlFMxX2ownfbH9RPF68lRUvYn balas@Centavra\r\n"
+            },
+            "metadata_options": [
+              {
+                "aws_v1_http_endpoint": 1,
+                "aws_v1_http_token": 2,
+                "aws_v2_http_endpoint": 1,
+                "aws_v2_http_token": 1,
+                "gce_http_endpoint": 1,
+                "gce_http_token": 1
+              }
+            ],
+            "name": "srv",
+            "network_acceleration_type": "standard",
+            "network_interface": [
+              {
+                "dns_record": [],
+                "index": 0,
+                "ip_address": "10.0.1.20",
+                "ipv4": true,
+                "ipv6": false,
+                "ipv6_address": "",
+                "ipv6_dns_record": [],
+                "mac_address": "d0:0d:1a:95:a8:3f",
+                "nat": true,
+                "nat_dns_record": [],
+                "nat_ip_address": "84.201.175.91",
+                "nat_ip_version": "IPV4",
+                "security_group_ids": [],
+                "subnet_id": "e9bfnojru6lhgjea4qjb"
+              }
+            ],
+            "placement_policy": [
+              {
+                "host_affinity_rules": [],
+                "placement_group_id": "",
+                "placement_group_partition": 0
+              }
+            ],
+            "platform_id": "standard-v1",
+            "resources": [
+              {
+                "core_fraction": 100,
+                "cores": 2,
+                "gpus": 0,
+                "memory": 4
+              }
+            ],
+            "scheduling_policy": [
+              {
+                "preemptible": false
+              }
+            ],
+            "secondary_disk": [],
+            "service_account_id": "",
+            "status": "running",
+            "timeouts": null,
+            "zone": "ru-central1-a"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjMwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMSJ9",
+          "dependencies": [
+            "yandex_vpc_address.srv_ip",
+            "yandex_vpc_network.network",
+            "yandex_vpc_route_table.nat_route",
+            "yandex_vpc_subnet.subnet"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_vpc_address",
+      "name": "srv_ip",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "created_at": "2026-06-27T05:38:12Z",
+            "deletion_protection": false,
+            "description": "",
+            "dns_record": [],
+            "external_ipv4_address": [
+              {
+                "address": "84.201.175.91",
+                "ddos_protection_provider": "",
+                "outgoing_smtp_capability": "",
+                "zone_id": "ru-central1-a"
+              }
+            ],
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "id": "e9b4g32kkh0hv66ul8ma",
+            "internal_ipv4_address": [],
+            "labels": {},
+            "name": "srv-static-ip",
+            "reserved": true,
+            "timeouts": null,
+            "used": true
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMCwiZGVsZXRlIjozMDAwMDAwMDAwMCwidXBkYXRlIjozMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_vpc_network",
+      "name": "network",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "created_at": "2026-06-27T05:06:14Z",
+            "default_security_group_id": "enp95gf3helcdkrui9h2",
+            "description": "",
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "id": "enp96g7t8ifq0lasl1dl",
+            "labels": {},
+            "name": "devops-network",
+            "subnet_ids": [
+              "e9bfnojru6lhgjea4qjb"
+            ],
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMCwiZGVsZXRlIjo2MDAwMDAwMDAwMCwidXBkYXRlIjo2MDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_vpc_route_table",
+      "name": "nat_route",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "created_at": "2026-06-27T06:05:31Z",
+            "description": "",
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "id": "enpp0ccpu7rsmf4ggago",
+            "labels": {},
+            "name": "nat-route",
+            "network_id": "enp96g7t8ifq0lasl1dl",
+            "static_route": [
+              {
+                "destination_prefix": "0.0.0.0/0",
+                "gateway_id": "",
+                "next_hop_address": "10.0.1.20"
+              }
+            ],
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwLCJ1cGRhdGUiOjE4MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "yandex_vpc_network.network"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "yandex_vpc_subnet",
+      "name": "subnet",
+      "provider": "provider[\"registry.terraform.io/yandex-cloud/yandex\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "created_at": "2026-06-27T05:06:15Z",
+            "description": "",
+            "dhcp_options": [],
+            "folder_id": "b1grdk8bc47i5p41d95e",
+            "id": "e9bfnojru6lhgjea4qjb",
+            "labels": {},
+            "name": "devops-subnet",
+            "network_id": "enp96g7t8ifq0lasl1dl",
+            "route_table_id": "enpp0ccpu7rsmf4ggago",
+            "timeouts": null,
+            "v4_cidr_blocks": [
+              "10.0.1.0/24"
+            ],
+            "v6_cidr_blocks": [],
+            "zone": "ru-central1-a"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAsImRlbGV0ZSI6MTgwMDAwMDAwMDAwLCJ1cGRhdGUiOjE4MDAwMDAwMDAwMH19",
+          "dependencies": [
+            "yandex_vpc_network.network",
+            "yandex_vpc_route_table.nat_route"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
