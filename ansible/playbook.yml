@@ -1,6 +1,6 @@
 ---
 - name: Setup srv
-  hosts: srv
+  hosts: servers
   become: true
 
   tasks:
@@ -12,6 +12,7 @@
           - curl
           - gnupg
           - lsb-release
+          - iptables-persistent
         state: present
         update_cache: yes
 
@@ -46,6 +47,28 @@
         name: ubuntu
         groups: docker
         append: yes
+
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: Add iptables NAT rule
+      iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: eth0
+        jump: MASQUERADE
+
+    - name: Create iptables directory
+      file:
+        path: /etc/iptables
+        state: directory
+
+    - name: Save iptables rules
+      shell: iptables-save > /etc/iptables/rules.v4
 
 - name: Setup Kubernetes nodes
   hosts: k8s
@@ -125,32 +148,3 @@
         - kubelet
         - kubeadm
         - kubectl
-
-- name: Enable NAT on srv
-  hosts: srv
-  become: true
-
-  tasks:
-    - name: Enable IP forwarding
-      sysctl:
-        name: net.ipv4.ip_forward
-        value: '1'
-        state: present
-        reload: yes
-
-    - name: Add iptables NAT rule
-      iptables:
-        table: nat
-        chain: POSTROUTING
-        out_interface: eth0
-        jump: MASQUERADE
-
-    - name: Save iptables rules
-      shell: iptables-save > /etc/iptables/rules.v4
-      args:
-        creates: /etc/iptables/rules.v4
-
-    - name: Install iptables-persistent
-      apt:
-        name: iptables-persistent
-        state: present
