@@ -1,0 +1,21 @@
+image:
+  repository: sysbedlam1/testapp
+  tag: latest
+  pullPolicy: Always
+
+app:
+  port: 3003
+  replicas: 1
+
+db:
+  name: tutorial-dev
+  user: postgres
+  password: djangopassword
+  port: 5432
+
+service:
+  type: NodePort
+  nodePort: 30003
+
+pvc:
+  size: 1Gi
