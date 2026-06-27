@@ -54,6 +54,10 @@ http://84.201.175.91
 
     На k8s-app:
     sudo kubeadm join 10.0.1.10:6443 --token <token> --discovery-token-ca-cert-hash <hash>
+    
+4. Мониторинг
+
+    Grafana: http://84.201.175.91:3000
 
 ## CI/CD
 
@@ -68,9 +72,7 @@ Pipeline автоматически:
 2. Пушит в Docker Hub как sysbedlam1/testapp:v1.0.x
 3. Деплоит в Kubernetes через Helm на srv
 
-5. Мониторинг
 
-    Grafana: http://84.201.175.91:3000
 
 ## Ручные шаги
 
