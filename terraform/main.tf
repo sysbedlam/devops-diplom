@@ -9,6 +9,13 @@ resource "yandex_vpc_subnet" "subnet" {
   v4_cidr_blocks = ["10.0.1.0/24"]
 }
 
+resource "yandex_vpc_address" "srv_ip" {
+  name = "srv-static-ip"
+  external_ipv4_address {
+    zone_id = var.zone
+  }
+}
+
 resource "yandex_compute_instance" "k8s_master" {
   name                      = "k8s-master"
   hostname                  = "k8s-master"
@@ -89,9 +96,10 @@ resource "yandex_compute_instance" "srv" {
   }
 
   network_interface {
-    subnet_id  = yandex_vpc_subnet.subnet.id
-    nat        = true
-    ip_address = "10.0.1.20"
+    subnet_id      = yandex_vpc_subnet.subnet.id
+    nat            = true
+    ip_address     = "10.0.1.20"
+    nat_ip_address = yandex_vpc_address.srv_ip.external_ipv4_address[0].address
   }
 
   metadata = {
