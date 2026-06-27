@@ -78,6 +78,5 @@ Pipeline автоматически:
 
 - Инициализация k8s кластера (kubeadm init/join)
 - Настройка kubeconfig на srv после инициализации
-- Установка Promtail: helm install promtail grafana/promtail --set config.clients[0].url=http://10.0.1.20:3100/loki/api/v1/push
 - Добавление datasources в Grafana (Prometheus, Loki)
 - Импорт дашбордов: Node Exporter (1860), Blackbox Exporter (7587)
