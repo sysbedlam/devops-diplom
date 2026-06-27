@@ -148,3 +148,116 @@
         - kubelet
         - kubeadm
         - kubectl
+
+- name: Install kubectl on srv
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Add Kubernetes apt key
+      apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
+        state: present
+
+    - name: Add Kubernetes repository
+      apt_repository:
+        repo: "deb https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
+        state: present
+
+    - name: Install kubectl
+      apt:
+        name: kubectl
+        state: present
+        update_cache: yes
+
+- name: Install helm on srv
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Install helm
+      shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      args:
+        creates: /usr/local/bin/helm
+
+- name: Setup nginx reverse proxy on srv
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Configure nginx reverse proxy
+      copy:
+        dest: /etc/nginx/sites-available/testapp
+        content: |
+          server {
+              listen 80;
+              location / {
+                  proxy_pass http://10.0.1.11:30003;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+              }
+          }
+
+    - name: Enable site
+      file:
+        src: /etc/nginx/sites-available/testapp
+        dest: /etc/nginx/sites-enabled/testapp
+        state: link
+
+    - name: Remove default site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+- name: Setup nginx reverse proxy on srv
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Configure nginx reverse proxy
+      copy:
+        dest: /etc/nginx/sites-available/testapp
+        content: |
+          server {
+              listen 80;
+              location / {
+                  proxy_pass http://10.0.1.10:30003;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+              }
+          }
+
+    - name: Enable site
+      file:
+        src: /etc/nginx/sites-available/testapp
+        dest: /etc/nginx/sites-enabled/testapp
+        state: link
+
+    - name: Remove default site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
